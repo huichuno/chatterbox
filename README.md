@@ -1,4 +1,13 @@
-#1. Install docker
+<a name="readme-top"></a>
+
+# chatterbox
+
+Build and run local LLMs on Intel iGPU with Ollama
+
+## Prerequisite
+
+* Install docker
+
 ```sh
 # Add Docker's official GPG key:
 sudo apt-get update
@@ -24,3 +33,33 @@ newgrp $USER
 # Verify docker is installed successfully
 docker run hello-world
 ```
+
+* Install make
+
+```sh
+sudo apt install make
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Quick start
+
+```sh
+git clone https://github.com/huichuno/chatterbox.git
+
+# list make options
+make help
+
+# run chatterbox and open-webui containers 
+make runall
+
+# make sure both containers are running
+docker ps
+
+# launch web browser and navigate to <host ip>:8080
+# signup and login
+
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
