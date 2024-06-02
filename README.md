@@ -2,7 +2,7 @@
 
 # chatterbox
 
-Build and run local LLMs on Intel iGPU with Ollama
+Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
 
 ## Prerequisite
 
@@ -46,7 +46,7 @@ Build and run local LLMs on Intel iGPU with Ollama
 ## Quick Start
 
   ```sh
-  git clone https://github.com/huichuno/chatterbox.git
+  git clone https://github.com/huichuno/chatterbox.git && cd chatterbox
 
   # list make options
   make help
@@ -65,8 +65,23 @@ Build and run local LLMs on Intel iGPU with Ollama
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Configuration
+
+* The default model is set by DEFAULT_MODEL env variable. Current default model is set to llama3 8B model.
+
+* Downloaded LLM models are stored in $HOME/ollama-models folder on the host system
+
+* Open-webui backend data is stored in $HOME/open-webui folder on the host system
+
+* Refer to the *Makefile* on all the default value of environment variables
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 ## Test Environment
 
   * | Hardware                       | Operating System | Kernel |
     | ---                            | ---              | ---    |
     | Intel(R) Core(TM) Ultra 7 155H | Ubuntu 22.04     | 6.5.0  |
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
