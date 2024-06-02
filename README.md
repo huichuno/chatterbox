@@ -43,7 +43,7 @@ Build and run local LLMs on Intel iGPU with Ollama
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Quick start
+## Quick Start
 
   ```sh
   git clone https://github.com/huichuno/chatterbox.git
@@ -65,3 +65,8 @@ Build and run local LLMs on Intel iGPU with Ollama
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Test Environment
+
+  * | Hardware                       | Operating System | Kernel |
+    | ---                            | ---              | ---    |
+    | Intel(R) Core(TM) Ultra 7 155H | Ubuntu 22.04     | 6.5.0  |
