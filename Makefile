@@ -51,7 +51,7 @@ runall: run
 		--name open-webui \
 		--restart always \
 		ghcr.io/open-webui/open-webui:main
-	@echo "Launch browser & navigate to <ip addr>:8080"
+	@echo "Launch web browser & navigate to <host ip>:8080 to get started.."
 
 .PHONY: check
 check:
