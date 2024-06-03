@@ -73,7 +73,7 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
 
 * Open-webui backend data is stored in $HOME/open-webui folder on the host system
 
-* Refer to the *Makefile* on all the default value of environment variables
+* Refer to the *Makefile* on all the environment variables default value
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -85,3 +85,35 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
     | Intel(R) Core(TM) Ultra 7 155H | Ubuntu 22.04     | 6.5.0  |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Misc
+
+* Run model on CPU only
+  ```sh
+  # Change <host ip> to host's ip address
+  HOST_IP=<host ip>
+  PORT=11435
+
+  # Run ollama container (CPU only)
+  docker run -d \
+    -p ${PORT}:${PORT} \
+    --add-host=host.docker.internal:host-gateway \
+    -v ${HOME}/ollama-models:/ollama-models \
+    -e OLLAMA_HOST=0.0.0.0:${PORT} \
+    -e OLLAMA_MODELS=/ollama-models \
+    --name ollama-cpu \
+    ollama/ollama
+
+  # Run open-webui container
+  docker run -d \
+    -p 3000:8080 \
+    --add-host=host.docker.internal:host-gateway \
+    -v ${HOME}/open-webui:/app/backend/data \
+    -e OLLAMA_BASE_URL=http://${HOST_IP}:${PORT} \
+    --name open-webui-cpu \
+    --restart always \
+    ghcr.io/open-webui/open-webui:main
+
+  # Launch web browser and navigate to <host ip>:3000
+
+  ```

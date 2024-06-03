@@ -22,7 +22,7 @@ build:
 
 .PHONY: run
 run:
-	@echo "Run 'chatterbot' container"
+	@echo "Run 'chatterbox' container"
 	@docker run -d \
 		--init \
     --net=host \
