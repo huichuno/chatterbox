@@ -1,5 +1,5 @@
 accelerate==0.21.0
-bigdl-core-cpp==2.5.0b20240601
+bigdl-core-cpp==2.5.0b20240604
 blinker==1.4
 certifi==2024.6.2
 charset-normalizer==3.3.2
@@ -7,13 +7,13 @@ cryptography==3.4.8
 dbus-python==1.2.18
 distro==1.7.0
 filelock==3.14.0
-fsspec==2024.5.0
+fsspec==2024.6.0
 gguf==0.6.0
 httplib2==0.20.2
 huggingface-hub==0.23.2
 idna==3.7
 importlib-metadata==4.6.4
-ipex-llm==2.1.0b20240601
+ipex-llm==2.1.0b20240604
 jeepney==0.7.1
 Jinja2==3.1.4
 keyring==23.5.0

@@ -25,22 +25,24 @@ run:
 	@echo "Run 'chatterbox' container"
 	@docker run -d \
 		--init \
-    --net=host \
-    --device=/dev/dri \
+		--net=host \
+		--device=/dev/dri \
 		-v ${HOME}/ollama-models:/ollama-models \
-    -e DEVICE=iGPU \
-    -e no_proxy=localhost,127.0.0.1 \
+		-e DEVICE=iGPU \
+		-e no_proxy=localhost,127.0.0.1 \
 		-e OLLAMA_HOST=0.0.0.0:11434 \
 		-e OLLAMA_MODELS=/ollama-models \
 		-e OLLAMA_NUM_GPU=999 \
-		-e ZES_ENABLE_SYSMAN=1 \
-		-e SYCL_CACHE_PERSISTENT=1 \
 		-e BIGDL_LLM_XMX_DISABLED=1 \
+		-e SYCL_CACHE_PERSISTENT=1 \
+		-e SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=1 \
+		-e USE_XETLA=OFF \
+		-e ZES_ENABLE_SYSMAN=1 \
 		-e DEFAULT_MODEL=llama3 \
-    --name=chatterbox \
-    --shm-size="16g" \
+		--name=chatterbox \
+		--shm-size="16g" \
 		--restart always \
-    huichuno/chatterbox
+		huichuno/chatterbox
 
 .PHONY: runall
 runall: run
@@ -76,9 +78,21 @@ cmd: prog
 	@echo "Run command in container: $(CMD_ARGS)"
 	@docker exec chatterbox $(CMD_ARGS)
 
+.PHONY: start
+start:
+	@echo "Start containers"
+	-@docker start chatterbox 2>/dev/null
+	-@docker start open-webui 2>/dev/null
+
+.PHONY: stop
+stop:
+	@echo "Stop running containers"
+	-@docker stop chatterbox 2>/dev/null
+	-@docker stop open-webui 2>/dev/null
+
 .PHONY: clean
 clean:
-	@echo "Stop and remove 'chatterbox' container"
+	@echo "Stop and remove containers"
 	-@docker stop chatterbox 2>/dev/null
 	-@docker rm -f chatterbox 2>/dev/null
 	-@docker stop open-webui 2>/dev/null

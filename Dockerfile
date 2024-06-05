@@ -56,6 +56,19 @@ RUN DEBIAN_FRONTEND=noninteractive \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
+WORKDIR /app
+
+RUN wget -nv https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.16238.4/intel-igc-core_1.0.16238.4_amd64.deb && \
+  wget -nv https://github.com/intel/intel-graphics-compiler/releases/download/igc-1.0.16238.4/intel-igc-opencl_1.0.16238.4_amd64.deb && \
+  wget -nv https://github.com/intel/compute-runtime/releases/download/24.09.28717.12/intel-level-zero-gpu-dbgsym_1.3.28717.12_amd64.ddeb && \
+  wget -nv https://github.com/intel/compute-runtime/releases/download/24.09.28717.12/intel-level-zero-gpu_1.3.28717.12_amd64.deb && \
+  wget -nv https://github.com/intel/compute-runtime/releases/download/24.09.28717.12/intel-opencl-icd-dbgsym_24.09.28717.12_amd64.ddeb && \
+  wget -nv https://github.com/intel/compute-runtime/releases/download/24.09.28717.12/intel-opencl-icd_24.09.28717.12_amd64.deb && \
+  wget -nv https://github.com/intel/compute-runtime/releases/download/24.09.28717.12/libigdgmm12_22.3.17_amd64.deb && \
+  dpkg -i *.deb && \
+  rm *.deb && \
+  rm *.ddeb
+
 RUN DEBIAN_FRONTEND=noninteractive \
   add-apt-repository ppa:deadsnakes/ppa -y && \
   apt-get install --no-install-recommends -y \
@@ -71,11 +84,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
   # pip install --no-cache-dir --upgrade requests argparse urllib3 
   # pip install --no-cache-dir --pre --upgrade ipex-llm[cpp]
 
-WORKDIR /app
 COPY requirements.txt .
 COPY run-llm.sh .
 
-RUN pip install -r requirements.txt && \
+RUN pip install --no-cache-dir -r requirements.txt && \
   chmod +x run-llm.sh && \
   init-ollama
 
@@ -84,8 +96,11 @@ ENV OLLAMA_HOST=0.0.0.0
 ENV OLLAMA_MODELS=/ollama-models
 ENV OLLAMA_NUM_GPU=999
 ENV no_proxy=localhost,127.0.0.1
-ENV ZES_ENABLE_SYSMAN=1
+ENV BIGDL_LLM_XMX_DISABLED=1
 ENV SYCL_CACHE_PERSISTENT=1
+ENV SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=1
+ENV USE_XETLA=OFF
+ENV ZES_ENABLE_SYSMAN=1
 ENV DEFAULT_MODEL=llama3
 
 CMD ["bash", "-c", "run-llm.sh $DEFAULT_MODEL"]
