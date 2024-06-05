@@ -69,6 +69,8 @@ RUN wget -nv https://github.com/intel/intel-graphics-compiler/releases/download/
   rm *.deb && \
   rm *.ddeb
 
+COPY requirements.txt .
+
 RUN DEBIAN_FRONTEND=noninteractive \
   add-apt-repository ppa:deadsnakes/ppa -y && \
   apt-get install --no-install-recommends -y \
@@ -80,15 +82,15 @@ RUN DEBIAN_FRONTEND=noninteractive \
   ln -s /usr/bin/python3 /usr/bin/python && \
   wget -nv https://bootstrap.pypa.io/get-pip.py && \
   python3 get-pip.py && \
-  rm get-pip.py
+  rm get-pip.py && \
+  pip install --no-cache-dir -r requirements.txt
   # pip install --no-cache-dir --upgrade requests argparse urllib3 
   # pip install --no-cache-dir --pre --upgrade ipex-llm[cpp]
 
-COPY requirements.txt .
-COPY run-llm.sh .
+COPY scripts/run-llm.sh .
+COPY scripts/benchmark.py .
 
-RUN pip install --no-cache-dir -r requirements.txt && \
-  chmod +x run-llm.sh && \
+RUN chmod +x run-llm.sh && \
   init-ollama
 
 ENV PATH=/app:$PATH
