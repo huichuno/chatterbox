@@ -35,6 +35,7 @@ run:
 		-e OLLAMA_NUM_GPU=999 \
 		-e ZES_ENABLE_SYSMAN=1 \
 		-e SYCL_CACHE_PERSISTENT=1 \
+		-e BIGDL_LLM_XMX_DISABLED=1 \
 		-e DEFAULT_MODEL=llama3 \
     --name=chatterbox \
     --shm-size="16g" \

@@ -86,6 +86,7 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
 ## Misc
 
 * Run model on CPU only
@@ -117,3 +118,14 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
   # Launch web browser and navigate to <host ip>:3000
 
   ```
+
+* Manually load and keep the model in memory
+  ```sh
+  curl http://localhost:11434/api/generate -d '{
+    "model": "llama2",
+    "keep_alive": -1
+  }'
+
+  ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
