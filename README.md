@@ -89,7 +89,7 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
 
 ## Misc
 
-* Run benchmark. Download model before running benchmark.
+* Run benchmark. Download models before running benchmark.
   ```sh
   # Execute command below to run chatterbox container
   make run    # or `make runall`
@@ -101,7 +101,7 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
   docker exec -it chatterbox python benchmark.py --help
 
   # Run benchmark
-  docker exec -it chatterbox python benchmark.py
+  docker exec -it chatterbox python benchmark.py > result.txt
 
   ```
 
