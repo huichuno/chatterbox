@@ -26,7 +26,7 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
     # Install docker
     sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-    # Add $USER to docker group
+    # Add $USER to docker group and reboot system if needed
     sudo usermod -aG docker $USER
     newgrp $USER
 
@@ -138,8 +138,18 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
 * Manually load and keep the model in memory
   ```sh
   curl http://localhost:11434/api/generate -d '{
-    "model": "llama2",
+    "model": "llama3",
     "keep_alive": -1
+  }'
+
+  ```
+
+* Manually interact with ollama
+  ```sh
+  curl http://localhost:11434/api/generate -d '{
+    "model": "llama3",
+    "prompt": "Why is the sky blue?",
+    "stream": false
   }'
 
   ```
