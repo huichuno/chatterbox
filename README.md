@@ -155,12 +155,14 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
   ```
 ## Enable Model
 
+* Method 1:
   ```sh
-  Method 1:
 
   Pull the model from the open webui (ex: nxphi47/seallm-7b-v2:q4_0)
 
-  Method 2: 
+  ```
+* Method 2:
+  ```sh
 
   # Download the model gguf 
 
@@ -171,7 +173,7 @@ Build and run local LLMs on Intel iGPU with Ollama & Open WebUI
 
   # Create a model from Modelfile with this command
   ollama create SeaLLM -f Modelfile
-  
+
   # Check if the model is created
   ollama list
 
