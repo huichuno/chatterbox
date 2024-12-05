@@ -44,17 +44,27 @@ run:
 		--restart always \
 		huichuno/chatterbox
 
+PHONY: runtts
+runtts: 
+	@echo "Run 'openedai-speech' container."
+	@docker compose -f ${HOME}/chatterbox/openedai-speech-service/docker-compose.yml up -d
+	@echo "Use <host ip>:8000 to access TTS server."
+
 .PHONY: runall
-runall: run
+runall: run runtts
 	@echo "Run 'open-webui' container."
 	@docker run -d \
 		--network=host \
 		-v ${HOME}/open-webui:/app/backend/data \
 		-e OLLAMA_BASE_URL=http://127.0.0.1:11434 \
+		-e WHISPER_MODEL=deepdml/faster-whisper-large-v3-turbo-ct2 \
+		-e AUDIO_TTS_ENGINE=openai \
+		-e AUDIO_TTS_OPENAI_API_BASE_URL=http://localhost:8000/v1 \
+		-e AUDIO_TTS_OPENAI_API_KEY=no-need \
 		--name open-webui \
 		--restart always \
 		ghcr.io/open-webui/open-webui:main
-	@echo "Launch web browser & navigate to <host ip>:8080 to get started.."
+	@echo "Launch web browser & navigate to <host ip>:8080 to get started."
 
 .PHONY: check
 check:
@@ -83,12 +93,14 @@ start:
 	@echo "Start containers"
 	-@docker start chatterbox 2>/dev/null
 	-@docker start open-webui 2>/dev/null
+	-@docker start openedai-speech 2>/dev/null
 
 .PHONY: stop
 stop:
 	@echo "Stop running containers"
 	-@docker stop chatterbox 2>/dev/null
 	-@docker stop open-webui 2>/dev/null
+	-@docker stop openedai-speech 2>/dev/null
 
 .PHONY: clean
 clean:
@@ -97,6 +109,8 @@ clean:
 	-@docker rm -f chatterbox 2>/dev/null
 	-@docker stop open-webui 2>/dev/null
 	-@docker rm -f open-webui 2>/dev/null
+	-@docker stop openedai-speech 2>/dev/null
+	-@docker rm -f openedai-speech 2>/dev/null
 
 .PHONY: help
 help:
@@ -105,10 +119,12 @@ help:
 	@echo "  all    - Run targets: clean, build & run"
 	@echo "  build  - Build chatterbox container image"
 	@echo "  check  - Check Dockerfile"
+	@echo "  stop	- Stop running containers"
 	@echo "  clean  - Stop and remove chatterbox container"
 	@echo "  log    - Print chatterbox container logs"
 	@echo "  run    - Run chatterbox container"
-	@echo "  runall - Run chatterbox and open-webui containers"
+	@echo "  runtts - Run openedai-speech containers"
+	@echo "  runall - Run chatterbox, open-webui, and openedai-speech containers"
 	@echo ""
 	@echo "  load   - DEBUG: Run LLM model, e.g. make load llama3, make load mistral, etc"
 	@echo "  cmd    - DEBUG: Run command in container, e.g. make cmd ollama list, etc"
