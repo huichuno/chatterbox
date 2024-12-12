@@ -3,6 +3,7 @@ services:
     build:
       dockerfile: Dockerfile
     image: ghcr.io/matatonic/openedai-speech
+    container_name: openedai-speech
     env_file: speech.env
     ports:
       - "8000:8000"
