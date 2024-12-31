@@ -13,44 +13,37 @@ endif
 prog: # ...
     # ...
 
-all: clean build run
-
-.PHONY: build
-build:
-	@echo "Build container image"
-	@docker build -t huichuno/chatterbox:latest .
+all: clean run
 
 .PHONY: run
 run:
 	@echo "Run 'chatterbox' container"
-	@docker run -d \
-		--init \
-		--net=host \
-		--device=/dev/dri \
-		-v ${HOME}/ollama-models:/ollama-models \
-		-e DEVICE=iGPU \
-		-e no_proxy=localhost,127.0.0.1 \
-		-e OLLAMA_HOST=0.0.0.0:11434 \
-		-e OLLAMA_MODELS=/ollama-models \
-		-e OLLAMA_NUM_GPU=999 \
-		-e BIGDL_LLM_XMX_DISABLED=1 \
-		-e SYCL_CACHE_PERSISTENT=1 \
-		-e SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=1 \
-		-e USE_XETLA=OFF \
-		-e ZES_ENABLE_SYSMAN=1 \
-		-e DEFAULT_MODEL=llama3 \
-		--name=chatterbox \
-		--shm-size="16g" \
-		--restart always \
-		huichuno/chatterbox
+	@docker run -d --restart=always \
+    --net=host \
+    --device=/dev/dri \
+    -p 11434:11434 \
+    -v ${HOME}/ollama-models:/root/.ollama/models \
+    -e PATH=/llm/ollama:${PATH} \
+    -e OLLAMA_HOST=0.0.0.0 \
+    -e OLLAMA_KEEP_ALIVE=-1 \
+    -e no_proxy=localhost,127.0.0.1 \
+    -e ZES_ENABLE_SYSMAN=1 \
+    -e OLLAMA_INTEL_GPU=true \
+    -e ONEAPI_DEVICE_SELECTOR=level_zero:0 \
+    -e DEVICE=Arc \
+    --shm-size="16g" \
+    --memory="32G" \
+    --name=chatterbox \
+    intelanalytics/ipex-llm-inference-cpp-xpu:2.2.0-SNAPSHOT \
+    /bin/bash -c "cd /llm/scripts/ && source ipex-llm-init --gpu --device Arc >> ipex-llm-init.log 2>&1 && bash start-ollama.sh && tail -f /llm/ollama/ollama.log"
 
-PHONY: runtts
+.PHONY: runtts
 runtts:
 	@echo "Run 'openedai-speech' container."
-	@docker compose -f ${HOME}/chatterbox/openedai-speech-service/docker-compose.yml up -d
+	@docker compose -f ${PWD}/openedai-speech-service/docker-compose.yml up -d
 	@echo "Use <host ip>:8000 to access TTS server."
 
-PHONY: runpipe
+.PHONY: runpipe
 runpipe:
 	@echo "Run 'pipelines' container."
 	@docker run -d \
@@ -75,7 +68,7 @@ runall: run runtts runpipe
 		-e OPENAI_API_KEY=0p3n-w3bu! \
 		--name open-webui \
 		--restart always \
-		ghcr.io/open-webui/open-webui:main
+		ghcr.io/open-webui/open-webui:v0.4.8
 	@echo "Launch web browser & navigate to <host ip>:8080 to get started."
 
 .PHONY: check
@@ -132,8 +125,7 @@ clean:
 help:
 	@echo ""
 	@echo "Targets:"
-	@echo "  all    	- Run targets: clean, build & run"
-	@echo "  build  	- Build chatterbox container image"
+	@echo "  all    	- Run targets: clean & run"
 	@echo "  check  	- Check Dockerfile"
 	@echo "  stop		- Stop running containers"
 	@echo "  clean  	- Stop and remove chatterbox container"
